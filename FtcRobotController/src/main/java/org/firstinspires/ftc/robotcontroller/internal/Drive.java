@@ -239,8 +239,13 @@ public class Drive extends OpMode{
                 intakeSpin.setPower(-0.1);
             }
         }
-        //one is off, three is on.
-        //two and four are placeholder numbers for split seconds
+        //Hang
+        if(gamepad2.left_bumper && gamepad2.dpad_up){
+            hang.setPower(1);
+        }
+        else if(gamepad2.left_bumper && gamepad2.dpad_down){
+            hang.setPower(-0.7);
+        }
 
 
         if(Math.abs(gamepad2.right_stick_y) < 0.05) {
