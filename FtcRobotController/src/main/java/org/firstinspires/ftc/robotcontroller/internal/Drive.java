@@ -98,7 +98,7 @@ public class Drive extends OpMode{
     private void controlRobot() {
         movement();
         //TODO: Make this turn on and off using right bumber
-        gameSpecific(true);
+        gameSpecific();
     }
     private void movement(){
 
@@ -171,7 +171,8 @@ public class Drive extends OpMode{
 
 
     }
-    private void gameSpecific(boolean clawAuto){
+    private void gameSpecific(){
+
         if(manualClaw == 1 && gamepad2.back){
             manualClaw ++;
         }
@@ -185,6 +186,19 @@ public class Drive extends OpMode{
             manualClaw =1;
         }
 
+        if(disableTouchSensor == 1 && gamepad2.left_bumper){
+            disableTouchSensor ++;
+        }
+        else if(disableTouchSensor == 2 && !gamepad2.left_bumper){
+            disableTouchSensor ++;
+        }
+        else if(disableTouchSensor == 3 && gamepad2.left_bumper){
+            disableTouchSensor ++;
+        }
+        else if(disableTouchSensor == 4 && gamepad2.left_bumper){
+            disableTouchSensor = 1;
+        }
+    //touch sensor disabled
         if(disableTouchSensor > 1){
             if(gamepad2.dpad_up){
                 intakeSpin.setPower(0.7);
@@ -193,7 +207,18 @@ public class Drive extends OpMode{
                 intakeSpin.setPower(-0.7);
             }
             lift.setPower(gamepad2.left_stick_y);
+            if (gamepad2.dpad_down) {
+                intakeSpin.setPower(0.7);
+            }
+            else if (gamepad2.dpad_up) {
+                intakeSpin.setPower(-0.7);
+            }
+            else{
+                intakeSpin.setPower(-0.1);
+            }
+
         }
+        //touch sensor is enabled
         else {
             if(touch.isPressed()){
                 if(gamepad2.left_stick_y > 0){
@@ -207,7 +232,7 @@ public class Drive extends OpMode{
                 intakeSpin.setPower(0.7);
             }
 
-            if (touch.isPressed() && gamepad2.dpad_up) {
+            else if (touch.isPressed() && gamepad2.dpad_up) {
                 intakeSpin.setPower(-0.7);
             }
             else{
@@ -216,18 +241,7 @@ public class Drive extends OpMode{
         }
         //one is off, three is on.
         //two and four are placeholder numbers for split seconds
-        if(disableTouchSensor == 1 && gamepad2.left_bumper){
-            disableTouchSensor ++;
-        }
-        else if(disableTouchSensor == 2 && !gamepad2.left_bumper){
-            disableTouchSensor ++;
-        }
-        else if(disableTouchSensor == 3 && gamepad2.left_bumper){
-            disableTouchSensor ++;
-        }
-        else if(disableTouchSensor == 4 && gamepad2.left_bumper){
-            disableTouchSensor = 1;
-        }
+
 
         if(Math.abs(gamepad2.right_stick_y) < 0.05) {
             //5 stack
@@ -283,8 +297,8 @@ public class Drive extends OpMode{
         }
 
     public void manualClaw(){
-        if(clawRotate.getPosition() + gamepad2.right_trigger - gamepad2.left_trigger >=0){
-            if(clawRotate.getPosition() + gamepad2.right_trigger - gamepad2.left_trigger <=1){
+        if(clawRotate.getPosition() + gamepad2.right_trigger - gamepad2.left_trigger >= 0){
+            if(clawRotate.getPosition() + gamepad2.right_trigger - gamepad2.left_trigger <= 1){
                 clawRotate.setPosition(clawRotate.getPosition() + gamepad2.right_trigger - gamepad2.left_trigger);
             }
             else{
