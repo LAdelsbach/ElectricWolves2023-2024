@@ -99,52 +99,99 @@ public class DistanceRecognition extends OpMode{
             motorBR.setPower(backRightPower);
         }
         else{
-
-            deltaY = left.getDistance(DistanceUnit.CM) - right.getDistance(DistanceUnit.CM);
-            deltaY = Math.abs(deltaY);
-            boolean isRight = false;
             double smallY = left.getDistance(DistanceUnit.CM);
+            boolean isRight = false;
+
             if(smallY > right.getDistance(DistanceUnit.CM)){
                 smallY = right.getDistance(DistanceUnit.CM);
                 isRight = true;
             }
-            double theta = Math.atan(xo/deltaY);
-            double fl = 0.1;
-            double fr = 0.1;
-            double bl = 0.1;
-            double br = 0.1;
+            deltaY = left.getDistance(DistanceUnit.CM) - right.getDistance(DistanceUnit.CM);
+            deltaY = Math.abs(deltaY);
+            deltaY /= smallY;
+            double maxSpeedMotor = 0.1;
+
+            double fl = maxSpeedMotor;
+            double fr = maxSpeedMotor;
+            double bl = maxSpeedMotor;
+            double br = maxSpeedMotor;
             int distanceFromWall = 10;
-
             if(smallY > 50){
-                fl = (smallY-distanceFromWall)/(smallY*10);
-                fr = (smallY-distanceFromWall)/(smallY*10);
-                bl = (smallY-distanceFromWall)/(smallY*10);
-                br = (smallY-distanceFromWall)/(smallY*10);
+                fl = (smallY-distanceFromWall)/(smallY);
+                fr = (smallY-distanceFromWall)/(smallY);
+                bl = (smallY-distanceFromWall)/(smallY);
+                br = (smallY-distanceFromWall)/(smallY);
             }
-                if(isRight){
-                        if(deltaY > 0.2){
-                            fl -= 0.2;
-                            bl -= 0.2;
-                        }
-                        else{
-                            fl -= deltaY;
-                            bl -= deltaY;
-                        }
+            double maxTurn = 0.1;
+            double currentTurn = deltaY;
+            if(currentTurn < maxTurn){
+                currentTurn = maxTurn;
+            }
 
-
+            if(isRight){
+                if(fr > maxSpeedMotor || br > maxSpeedMotor){
+                    if(deltaY > maxTurn){
+                        fl -= maxTurn;
+                        bl -= maxTurn;
+                    }
+                    else{
+                        fl -= deltaY;
+                        bl -= deltaY;
+                    }
                 }
                 else{
-                        if(deltaY > 0.2){
-                            fr -= 0.2;
-                            br -= 0.2;
-                        }
-                        else{
-                            fr -= deltaY;
-                            br -= deltaY;
-                        }
 
+
+            }
                 }
-
+//                if(isRight){
+//                    if(fl+bl+br+fr > 0.1){
+//                        if(deltaY > 0.1){
+//                            fl -= 0.1;
+//                            bl -= 0.1;
+//                        }
+//                        else{
+//                            fl -= deltaY;
+//                            bl -= deltaY;
+//                        }
+//                    }
+//                    else{
+//                        if(deltaY > 0.1){
+//                            fr += 0.1;
+//                            br += 0.1;
+//                        }
+//                        else{
+//                            fr += deltaY;
+//                            br += deltaY;
+//                        }
+//                    }
+//
+//                    //if(fl+bl+br+fr > 0.1){
+//                }
+//                else{
+//                    if(fl+bl+br+fr > 0.1){
+//
+//                        if(deltaY > 0.1){
+//                            fr -= 0.1;
+//                            br -= 0.1;
+//                        }
+//                        else{
+//                            fr -= deltaY;
+//                            br -= deltaY;
+//                        }}
+//                    else{
+//                        if(deltaY > 0.1){
+//                            fl += 0.1;
+//                            bl += 0.1;
+//                        }
+//                        else{
+//                            fl += deltaY;
+//                            bl += deltaY;
+//                        }
+//                    }
+//
+//                }
+//
             motorFL.setPower(fl);
             motorBL.setPower(bl);
             motorFR.setPower(fr);
