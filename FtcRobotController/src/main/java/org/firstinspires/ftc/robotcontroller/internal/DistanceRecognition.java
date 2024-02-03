@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.robotcontroller.internal;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "DistanceRecognition", group = "Iterative Opmode")
-
+@Config
 public class DistanceRecognition extends OpMode{
     DcMotor motorFL;
     DcMotor motorFR;
@@ -33,6 +34,17 @@ public class DistanceRecognition extends OpMode{
 
     int disableTouchSensor;
     int manualClaw;
+
+    public static double maxSpeedMotor = 0.1;
+
+    public static int distanceFromWall = 1;
+    public static double slowMultiplier = 2;
+    public static double maxTurn = 0.1;
+
+
+    public static double slowDistance =  40;
+    public static double slowConstant = 0.3;
+
 
     public DistanceRecognition(){
         super();
@@ -108,22 +120,19 @@ public class DistanceRecognition extends OpMode{
             }
             deltaY = left.getDistance(DistanceUnit.CM) - right.getDistance(DistanceUnit.CM);
             deltaY = Math.abs(deltaY);
-            deltaY /= smallY;
-            double maxSpeedMotor = 0.1;
+            deltaY /= smallY * slowConstant;
 
             double fl = maxSpeedMotor;
             double fr = maxSpeedMotor;
             double bl = maxSpeedMotor;
             double br = maxSpeedMotor;
-            int distanceFromWall = 10;
-            double slowMultiplier = 1.5;
-            if(smallY > 50){
+
+            if(smallY > slowDistance){
                 fl = (smallY-distanceFromWall)/(smallY * slowMultiplier);
                 fr = (smallY-distanceFromWall)/(smallY * slowMultiplier);
                 bl = (smallY-distanceFromWall)/(smallY * slowMultiplier);
                 br = (smallY-distanceFromWall)/(smallY * slowMultiplier);
             }
-            double maxTurn = 0.1;
             double currentTurn = deltaY;
             if(currentTurn < maxTurn){
                 currentTurn = maxTurn;
