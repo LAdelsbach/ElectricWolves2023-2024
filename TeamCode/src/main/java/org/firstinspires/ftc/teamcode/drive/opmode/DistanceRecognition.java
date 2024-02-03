@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.internal;
+package org.firstinspires.ftc.teamcode.drive.opmode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -81,7 +81,7 @@ public class DistanceRecognition extends OpMode{
 
         if(!gamepad1.a) {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
 
             // Denominator is the largest motor power (absolute value) or 1
@@ -116,11 +116,12 @@ public class DistanceRecognition extends OpMode{
             double bl = maxSpeedMotor;
             double br = maxSpeedMotor;
             int distanceFromWall = 10;
+            double slowMultiplier = 1.5;
             if(smallY > 50){
-                fl = (smallY-distanceFromWall)/(smallY);
-                fr = (smallY-distanceFromWall)/(smallY);
-                bl = (smallY-distanceFromWall)/(smallY);
-                br = (smallY-distanceFromWall)/(smallY);
+                fl = (smallY-distanceFromWall)/(smallY * slowMultiplier);
+                fr = (smallY-distanceFromWall)/(smallY * slowMultiplier);
+                bl = (smallY-distanceFromWall)/(smallY * slowMultiplier);
+                br = (smallY-distanceFromWall)/(smallY * slowMultiplier);
             }
             double maxTurn = 0.1;
             double currentTurn = deltaY;
@@ -128,70 +129,27 @@ public class DistanceRecognition extends OpMode{
                 currentTurn = maxTurn;
             }
 
-            if(isRight){
-                if(fr > maxSpeedMotor || br > maxSpeedMotor){
-                    if(deltaY > maxTurn){
-                        fl -= maxTurn;
-                        bl -= maxTurn;
-                    }
-                    else{
-                        fl -= deltaY;
-                        bl -= deltaY;
-                    }
+            if(!isRight){
+                if(fr + currentTurn > maxSpeedMotor || br +currentTurn> maxSpeedMotor){
+                    fl -= currentTurn;
+                    bl -= currentTurn;
                 }
                 else{
-
-
-            }
+                    fr += currentTurn;
+                    br += currentTurn;
                 }
-//                if(isRight){
-//                    if(fl+bl+br+fr > 0.1){
-//                        if(deltaY > 0.1){
-//                            fl -= 0.1;
-//                            bl -= 0.1;
-//                        }
-//                        else{
-//                            fl -= deltaY;
-//                            bl -= deltaY;
-//                        }
-//                    }
-//                    else{
-//                        if(deltaY > 0.1){
-//                            fr += 0.1;
-//                            br += 0.1;
-//                        }
-//                        else{
-//                            fr += deltaY;
-//                            br += deltaY;
-//                        }
-//                    }
-//
-//                    //if(fl+bl+br+fr > 0.1){
-//                }
-//                else{
-//                    if(fl+bl+br+fr > 0.1){
-//
-//                        if(deltaY > 0.1){
-//                            fr -= 0.1;
-//                            br -= 0.1;
-//                        }
-//                        else{
-//                            fr -= deltaY;
-//                            br -= deltaY;
-//                        }}
-//                    else{
-//                        if(deltaY > 0.1){
-//                            fl += 0.1;
-//                            bl += 0.1;
-//                        }
-//                        else{
-//                            fl += deltaY;
-//                            bl += deltaY;
-//                        }
-//                    }
-//
-//                }
-//
+            }
+            else{
+                if(fl + currentTurn > maxSpeedMotor || bl +currentTurn> maxSpeedMotor){
+                    fr -= currentTurn;
+                    br -= currentTurn;
+                }
+                else{
+                    fl += currentTurn;
+                    bl += currentTurn;
+                }
+            }
+
             motorFL.setPower(fl);
             motorBL.setPower(bl);
             motorFR.setPower(fr);
