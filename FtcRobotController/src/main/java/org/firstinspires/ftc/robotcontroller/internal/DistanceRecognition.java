@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "DistanceRecognition", group = "Iterative Opmode")
+//this allows me to use the dashboard
 @Config
 public class DistanceRecognition extends OpMode{
     DcMotor motorFL;
@@ -43,7 +44,7 @@ public class DistanceRecognition extends OpMode{
 
 
     public static double slowDistance =  40;
-    public static double slowConstant = 0.3;
+    public static double slowTurnConstant = 0.3;
 
 
     public DistanceRecognition(){
@@ -120,7 +121,7 @@ public class DistanceRecognition extends OpMode{
             }
             deltaY = left.getDistance(DistanceUnit.CM) - right.getDistance(DistanceUnit.CM);
             deltaY = Math.abs(deltaY);
-            deltaY /= smallY * slowConstant;
+            deltaY /= smallY * slowTurnConstant;
 
             double fl = maxSpeedMotor;
             double fr = maxSpeedMotor;

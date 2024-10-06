@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -36,9 +37,7 @@ public class Drive extends OpMode{
     Servo clawRotate;
     double xo;
     double deltaY;
-
     double angleOfArm;
-
 
     int disableTouchSensor;
     int manualClaw;
@@ -53,13 +52,18 @@ public class Drive extends OpMode{
         motorFR = hardwareMap.dcMotor.get("FR");
         motorBL = hardwareMap.dcMotor.get("BL");
         motorBR = hardwareMap.dcMotor.get("BR");
-        intakeSpin = hardwareMap.dcMotor.get("intakeSpin");
+        //
+        intakeSpin = hardwareMap.dcMotor.get("hang");
         lift = hardwareMap.dcMotor.get("lift");
-        hang = hardwareMap.dcMotor.get("hang");
+//        hang = hardwareMap.dcMotor.get("hang");
+
+        //
         touch = hardwareMap.get(TouchSensor.class, "Touch");
-         reference = hardwareMap.get(Servo.class, "reference");
-         reverse = hardwareMap.get(Servo.class, "reverse");
-         clamp = hardwareMap.get(Servo.class, "clamp");
+        //
+        reverse = hardwareMap.get(Servo.class, "reference");
+        reference = hardwareMap.get(Servo.class, "reverse");
+         //
+
          clawRotate = hardwareMap.get(Servo.class, "clawRotate");
          left = hardwareMap.get(DistanceSensor.class, "left");
          right = hardwareMap.get(DistanceSensor.class, "right");
@@ -74,14 +78,15 @@ public class Drive extends OpMode{
         //TODO: check these bottom ones to see if they need to be switched
         intakeSpin.setDirection(DcMotorSimple.Direction.FORWARD);
         lift.setDirection(DcMotorSimple.Direction.FORWARD);
-        hang.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        //taking out a line of code that says hang.setDirection(DcMotorSimple.Direction.FORWARD);
+        //hang.setDirection(DcMotorSimple.Direction.FORWARD);
 
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         reference.setDirection(Servo.Direction.FORWARD);
         reverse.setDirection(Servo.Direction.FORWARD);
-        clamp.setDirection(Servo.Direction.FORWARD);
         clawRotate.setDirection(Servo.Direction.FORWARD);
 
         //TODO: Set angle of Arm to actual value
@@ -161,15 +166,7 @@ public class Drive extends OpMode{
                     }
                 }
             }
-
-
-
-
         }
-
-
-
-
     }
     private void gameSpecific(){
 
@@ -178,7 +175,7 @@ public class Drive extends OpMode{
         }
         if(manualClaw == 2 && !gamepad2.back){
             manualClaw ++;
-        }
+        }//claw is equal to three --- of position
         if(manualClaw == 3 && gamepad2.back){
             manualClaw ++;
         }
@@ -199,7 +196,7 @@ public class Drive extends OpMode{
             disableTouchSensor = 1;
         }
     //touch sensor disabled
-        if(disableTouchSensor > 1){
+        if(disableTouchSensor == 1){
             if(gamepad2.dpad_up){
                 intakeSpin.setPower(0.7);
             }
@@ -249,7 +246,7 @@ public class Drive extends OpMode{
 
 
         if(Math.abs(gamepad2.right_stick_y) < 0.05) {
-            //5 stack
+            //5 stack (like in valorant)
             if (gamepad2.y) {
                 reference.setPosition(0.75);
                 reverse.setPosition(0.25);
@@ -272,8 +269,8 @@ public class Drive extends OpMode{
             }
             //off the floor
             if (gamepad2.right_bumper) {
-                reference.setPosition(0.25);
-                reverse.setPosition(0.75);
+                reference.setPosition(0);
+                reverse.setPosition(1);
             }
         }
         else{
@@ -345,7 +342,6 @@ public class Drive extends OpMode{
         telemetry.addData("Reference Intake Servo", reference.getPosition());
         telemetry.addData("Reverse Intake Servo", reverse.getPosition());
         //Claw Servo Information
-        telemetry.addData("clamp", clamp.getPosition());
         telemetry.addData("Claw Rotate", clawRotate.getPosition());
         //Touch Sensor Information
         telemetry.addData("Touch Sensor", touch.isPressed());
